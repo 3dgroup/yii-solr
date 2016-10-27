@@ -66,12 +66,12 @@ class ASolrSort extends CSort
 							$criteria->setParam($name,$value);
 						}
 					else
-						$orders[]=isset($definition[$dir]) ? $definition[$dir] : $attribute.($descending ? ' DESC':'');
+						$orders[]=isset($definition[$dir]) ? $definition[$dir] : $attribute.($descending ? ' desc':'');
 				}
 				else if($definition!==false)
 				{
 					$attribute=$definition;
-					$orders[]=$descending?$attribute.' DESC':$attribute;
+					$orders[]=$descending?$attribute.' desc':$attribute;
 				}
 			}
 			if($orders!==array())
@@ -82,7 +82,7 @@ class ASolrSort extends CSort
 	/**
 	 * Solr does not support ORDER BY
 	 */
-	public function getOrderBy($criteria = NULL)
+	public function getOrderBy($criteria=null)
 	{
 		throw new CException('Solr sorting does not support ORDER BY');
 	}

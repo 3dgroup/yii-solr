@@ -282,7 +282,13 @@ class ASolrDocument extends CFormModel implements IASolrDocument{
 			if ($this->{$attribute} !== null) {
 				if (is_array($this->{$attribute})) {
 					foreach($this->{$attribute} as $value) {
-						$this->_inputDocument->addField($attribute,$value);
+                                            if(is_array($value)){
+                                               foreach($value AS $thisvalue){
+                                                   $this->_inputDocument->addField($attribute,$thisvalue);
+                                               }
+                                            } else {
+                                                $this->_inputDocument->addField($attribute,$value);
+                                            }	
 					}
 				}
 				else {
@@ -682,8 +688,7 @@ class ASolrDocument extends CFormModel implements IASolrDocument{
 		Yii::trace(get_class($this).'.count()','packages.solr.ASolrDocument');
 		if ($criteria === null) {
 			$criteria = new ASolrCriteria();
-		}
-		$this->applyScopes($criteria);
+                }
 		return $this->getSolrConnection()->count($criteria);
 	}
 

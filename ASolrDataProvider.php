@@ -17,8 +17,8 @@ class ASolrDataProvider extends CActiveDataProvider {
 	 * Defaults to false.
 	 * @var boolean
 	 */
-	public $loadFromDB = false;
-
+	public $loadFromDB = true;
+	public $cWith;
 	/**
 	 * Holds the response from solr
 	 * @var ASolrQueryResponse
@@ -127,22 +127,28 @@ class ASolrDataProvider extends CActiveDataProvider {
 			$sort->applyOrder($criteria);
 
 		if ($this->model instanceof CActiveRecord) {
+			
 			// this should be a model with ASolrSearchable attached
 			if ($this->loadFromDB) {
 				$results = $this->model->getSolrDocument()->findAll($criteria);
+				
 				$this->_solrQueryResponse = $this->model->getSolrDocument()->getSolrConnection()->getLastQueryResponse();
 				$ids = array();
 				foreach($results as $n => $item /* @var ASolrDocument $item */) {
 					$ids[$n] = $item->getPrimaryKey();
 				}
+				
 				if (!empty($ids)){
 					$c = new CDbCriteria();
 					$fields = $ids;
 					array_unshift($fields,$this->model->getTableAlias().'.'.$this->model->getMetaData()->tableSchema->primaryKey);
 					$c->order = 'FIELD('.implode(',',$fields).')';// keep the order of objects as it is from solr's results
+					if($this->cWith) $c->with = $this->cWith;
 					$data = $this->model->findAllByPk($ids,$c);
 					$ids = array_flip($ids);
 					foreach($data as $n => $model) {
+
+					
 						$model->setSolrDocument($results[$ids[$model->getPrimaryKey()]]);
 					}
 				}else {

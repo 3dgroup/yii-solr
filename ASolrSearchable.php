@@ -117,14 +117,16 @@ class ASolrSearchable extends CActiveRecordBehavior {
 	protected function resolveAttributes() {
 		$names = array();
 		foreach($this->getAttributes() as $modelAttribute => $docAttribute) {
+				
 			if (!strstr($modelAttribute,".")) {
 				$names[$modelAttribute] = array($this->getOwner(),$modelAttribute);
-				continue;
 			}
 			$reference = $this->getOwner(); /* @var CActiveRecord $reference */
 			$pointers = explode(".",$modelAttribute);
 			$lastItem = array_pop($pointers);
+	
 			foreach($pointers as $pointer) {
+
 				$reference = $reference->{$pointer};
 			}
 			$names[$modelAttribute] = array($reference, $lastItem);
@@ -203,6 +205,7 @@ class ASolrSearchable extends CActiveRecordBehavior {
 	 * @return boolean true if the document was indexed successfully
 	 */
 	public function index() {
+	
 		if (!$this->isIndexable())
 			return true;
 		$document = $this->getSolrDocument(true);
@@ -212,17 +215,19 @@ class ASolrSearchable extends CActiveRecordBehavior {
 		if ($this->smartIndex) {
 			$this->_oldAttributes = array();
 			foreach($this->resolveAttributes() as $key => $item) {
+		
 				list($object, $property) = $item;
 				$this->_oldAttributes[$key] = $this->resolveAttributeValue($object, $property);
 			}
 		}
+		
 		return true;
 	}
 	/**
 	 * Triggered after the attached model is found.
 	 * Stores the current state of attributes we care about to see if they have changed.
 	 * @param CEvent $event the event raised
-	 */
+	
 	public function afterFind($event) {
 		if ($this->smartIndex) {
 			$this->_oldAttributes = array();
@@ -231,7 +236,7 @@ class ASolrSearchable extends CActiveRecordBehavior {
 				$this->_oldAttributes[$key] = $this->resolveAttributeValue($object, $property);
 			}
 		}
-	}
+	} */
 
 	/**
 	 * Deletes the relevant document from the solr index after the model is deleted
@@ -249,6 +254,7 @@ class ASolrSearchable extends CActiveRecordBehavior {
 		if (!$this->isIndexable() || !$this->getIsModified()) {
 			return;
 		}
+		
 		$this->index();
 	}
 	/**
@@ -332,6 +338,7 @@ class ASolrSearchable extends CActiveRecordBehavior {
 				$model->{$relationName} = $relationClass::model()->populateRecord($attributes);
 			}
 		}
+		
 		return $model;
 	}
 

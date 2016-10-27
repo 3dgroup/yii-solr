@@ -27,6 +27,7 @@ class ASolrCriteria extends SolrQuery {
 		return $this;
 	}
 
+
 	/**
 	 * Returns a property value based on its name.
 	 * Do not call this method. This is a PHP magic method that we override

@@ -83,16 +83,23 @@ class ASolrQueryResponse extends CComponent {
 	 */
 	protected function loadGroups()
 	{
+ 
 		$this->_groups = new CAttributeCollection;
+               
 		if (!isset($this->getSolrObject()->grouped))
 			return false;
+     
 		foreach($this->getSolrObject()->grouped as $name => $rawGroup) {
 			$group = new ASolrGroup();
 			$group->name = $name;
 			$group->total = $rawGroup->matches;
-			$this->processResults($rawGroup->doclist->docs, $group);
+                      
+//			$this->processResults($rawGroup->doclist->docs, $group);
+			$this->processResults($rawGroup->groups, $group);
 			$this->_groups->{$name} = $group;
+                        
 		}
+     
 		return true;
 	}
 	/**
@@ -208,7 +215,15 @@ class ASolrQueryResponse extends CComponent {
 	{
 		if ($this->_results === null) {
 			$this->_results = new ASolrResultList;
-			$this->_results->total = isset($this->_solrObject->response->numFound) ? $this->_solrObject->response->numFound : 0;
+//                             
+                        //* ONLY WORKS WHERE THE GROUP IS THE ID MUST CHANGE ON OTHER FIELD
+                        if(isset($this->_solrObject->grouped)){
+
+//                            $this->_results->total = isset($this->_solrObject->grouped->root_i->ngroups) ?  $this->_solrObject->grouped->root_i->ngroups : $this->_solrObject->grouped->root_i->matches ;
+                  
+                        } else {
+                            $this->_results->total = isset($this->_solrObject->response->numFound) ? $this->_solrObject->response->numFound : 0;
+                        }
 			if ($this->_results->total)
 				$this->processResults($this->_solrObject->response->docs,$this->_results);
 		}
@@ -228,7 +243,11 @@ class ASolrQueryResponse extends CComponent {
 		if ($highlighting)
 			$highlights = array_values((array) $this->_solrObject->highlighting);
 		if ($rawResults) {
+                    
 			foreach($rawResults as $n => $row) {
+                            // Grouped query did not work without 
+                              if($row->doclist) $row = $row->doclist->docs[0];
+
 				$result = $modelClass::model()->populateRecord($row); /* @var ASolrDocument $result */
 				$result->setPosition($n + $this->_criteria->getOffset());
 				$result->setSolrResponse($this);
