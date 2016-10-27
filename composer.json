@@ -1,0 +1,21 @@
+{
+    "name": "istvanfodor/YiiSolr",
+    "description": "A Yii extension that provides a wrapper for the pecl Solr library.",
+    "keywords": ["solr","yii","yii1"],
+    "type": "yii-extension",
+    "license": "",
+    "authors": [
+        {
+            "name": "Charles Pick",
+            "email": "charles.pick@gmail.com",
+            "homepage": "http://github.com/phpnode",
+            "role": "original author"
+        },
+        {
+            "name": "Istvan Fodor",
+            "email": "istvan.fodor@3dgroupuk.com",
+            "homepage": "http://github.com/istvanfodor",
+            "role": "packager"
+        }
+    ],
+}
