@@ -1,5 +1,5 @@
 {
-    "name": "istvanfodor/YiiSolr",
+    "name": "3dgroup/yii-solr",
     "description": "A Yii extension that provides a wrapper for the pecl Solr library.",
     "keywords": ["solr","yii","yii1"],
     "type": "yii-extension",
