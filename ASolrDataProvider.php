@@ -79,7 +79,7 @@ class ASolrDataProvider extends CActiveDataProvider {
 	 * Returns the sort object.
 	 * @return CSort the sorting object. If this is false, it means the sorting is disabled.
 	 */
-	public function getSort()
+	public function getSort($className = 'CSort')
 	{
 		if($this->_sort===null)
 		{
